@@ -8,8 +8,13 @@
   "enableNativeAPI": true,
   "nativeAllowList": [
     "app.*",
-    "filesystem.readDirectory"
+    "filesystem.*",
+    "os.*"
   ],
+  "serverHeaders": {
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "require-corp"
+  },
   "modes": {
     "window": {
       "title": "ga-capstone-project-desktop",

@@ -17,5 +17,7 @@
     "plugin:prettier/recommended"
   ],
   "plugins": [],
-  "rules": {}
+  "rules": {
+    "react/prop-types": "off"
+  }
 }

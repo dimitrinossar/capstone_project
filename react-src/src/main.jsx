@@ -3,7 +3,16 @@ import App from './App.jsx'
 import './index.css'
 
 import { init } from '@neutralinojs/lib'
+import { BrowserRouter } from 'react-router-dom'
+import { createFFmpeg } from '@ffmpeg/ffmpeg'
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+const ffmpeg = createFFmpeg({ log: true })
+ffmpeg.load()
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <App ffmpeg={ffmpeg} />
+  </BrowserRouter>,
+)
 
 init()
