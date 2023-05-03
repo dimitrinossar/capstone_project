@@ -21,7 +21,8 @@
       "title": "ga-capstone-project-desktop",
       "width": 1200,
       "height": 700,
-      "borderless": true
+      "borderless": true,
+      "icon": "/react-src/public/63obu2.jpeg"
     }
   },
   "cli": {

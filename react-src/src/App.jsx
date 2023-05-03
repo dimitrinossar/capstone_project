@@ -37,9 +37,9 @@ function App({ ffmpeg }) {
   const handleMinimize = async () => await window.minimize()
 
   const addCheckMark = (updateIndex, setFunction) =>
-    setFunction(
-      uploads.map((upload, index) =>
-        updateIndex === index ? upload + '✅' : upload,
+    setFunction((previous) =>
+      previous.map((elem, index) =>
+        updateIndex === index ? elem + ' - ✅' : elem,
       ),
     )
 
