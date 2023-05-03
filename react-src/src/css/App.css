@@ -1,0 +1,9 @@
+.App {
+  height: 100%;
+}
+
+.actions {
+  margin: 0 50px;
+  display: flex;
+  justify-content: space-between;
+}

@@ -3,31 +3,47 @@ import { fetchFile } from '@ffmpeg/ffmpeg'
 import { filesystem } from '@neutralinojs/lib'
 import { useNavigate } from 'react-router-dom'
 
-export default function TranscodePage({ ffmpeg, uploads, onTranscode }) {
+import List from '../components/List'
+
+import { Button } from 'react-desktop/macOs'
+
+export default function TranscodePage({
+  ffmpeg,
+  status,
+  uploads,
+  setUploads,
+  setDownloads,
+  addCheckMark,
+}) {
   const [option, setOption] = useState('')
+
   const navigate = useNavigate()
 
   const handleChange = ({ target }) => {
     setOption(target.value)
   }
 
-  const handleTranscode = async (event) => {
-    event.preventDefault()
+  const handleTranscode = async () => {
+    setOption('')
 
     let commands
     let extension
     switch (option) {
-      case 'FLAC':
-        commands = [
-          '-sample_fmt',
-          's16',
-          '-ar',
-          '44100',
-          '-compression_level',
-          '8',
-        ]
-        extension = '.flac'
-        break
+      // case 'WAV':
+      //   commands = []
+      //   extension = '.wav'
+      //   break
+      // case 'FLAC':
+      //   commands = [
+      //     '-sample_fmt',
+      //     's16',
+      //     '-ar',
+      //     '44100',
+      //     '-compression_level',
+      //     '8',
+      //   ]
+      //   extension = '.flac'
+      //   break
       case 'MP3 320':
         commands = ['-b:a', '320k']
         extension = '.mp3'
@@ -38,7 +54,7 @@ export default function TranscodePage({ ffmpeg, uploads, onTranscode }) {
         break
     }
 
-    for (let upload of uploads) {
+    for (let [index, upload] of uploads.entries()) {
       const fileName = upload.split('/').slice(-1)[0]
       const inputName = `ORIGINAL-${fileName}`
       const outputName = fileName.split('.').slice(0, -1).join('')
@@ -46,23 +62,32 @@ export default function TranscodePage({ ffmpeg, uploads, onTranscode }) {
       console.log(inputName, outputName)
       ffmpeg.FS('writeFile', inputName, await fetchFile(input))
       await ffmpeg.run('-i', inputName, ...commands, outputName + extension)
-      onTranscode(outputName + extension)
+      setDownloads((downloads) => [...downloads, `${outputName}${extension}`])
+      addCheckMark(index, setUploads)
     }
     navigate('/tag')
   }
 
   return (
     <>
-      <h2>Select a format</h2>
-      <form onSubmit={handleTranscode}>
+      <List title={'Transcode Files...'} items={uploads} status={status} />
+      <footer className="actions">
         <select name="format" onChange={handleChange}>
           <option value="">Select a format...</option>
-          <option value="FLAC">FLAC</option>
+          {/* <option value="WAV">WAV</option> */}
+          {/* <option value="FLAC">FLAC</option> */}
           <option value="MP3 320">MP3 320</option>
           <option value="MP3 V0">MP3 V0</option>
         </select>
-        <button disabled={!option}>Transcode</button>
-      </form>
+        <Button
+          color="blue"
+          size="16"
+          disabled={!option}
+          onClick={handleTranscode}
+        >
+          Transcode
+        </Button>
+      </footer>
     </>
   )
 }
